@@ -1,3 +1,5 @@
+
+
 document.getElementById("predictionForm").addEventListener("submit", async function(e) {
     e.preventDefault(); // prevent form from reloading page
 
@@ -26,3 +28,4 @@ document.getElementById("predictionForm").addEventListener("submit", async funct
     // Display result
     document.getElementById("result").innerText = `Claim Probability: ${data.likelihood}%`;
 });
+

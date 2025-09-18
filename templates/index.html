@@ -1,47 +1,147 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Insurance Claim Prediction</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Claim Predictor</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            background: url("{{ url_for('static', filename='insim.png') }}") no-repeat center center;
+            background-size: 120%;
+            font-family: Arial, sans-serif;
+            padding-left: 60%;
+        }
+
+        .notepad {
+            width: 330px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 23px 60px 23px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            backdrop-filter: blur(5px);
+            margin-right: 100px;
+            margin-left: 70px;
+            margin-bottom: 80px;
+            margin-top: 170px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #aaa;
+            border-radius: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 5px;
+            background: #007BFF;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: #222;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Insurance Claim Prediction</h2>
-        <form id="predictionForm">
+    <div class="notepad">
+        <h2>Insurance Claim Predictor</h2>
+        <form id="claimForm">
             <label for="age">Age:</label>
-            <input type="number" id="age" name="age" required><br>
+            <input type="number" id="age" name="age" placeholder="Enter your age" min="1" max="120" required>
 
             <label for="gender">Gender:</label>
             <select id="gender" name="gender" required>
-                <option value="">Select</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select><br>
+                <option value="">--Select--</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
 
             <label for="policy_type">Policy Type:</label>
             <select id="policy_type" name="policy_type" required>
-                <option value="">Select</option>
-                <option value="Basic">Basic</option>
-                <option value="Premium">Premium</option>
-                <option value="Gold">Gold</option>
-            </select><br>
+                <option value="">--Select--</option>
+                <option value="basic">Basic</option>
+                <option value="premium">Premium</option>
+            </select>
 
             <label for="medical_history">Medical History:</label>
             <select id="medical_history" name="medical_history" required>
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-            </select><br>
+                <option value="">--Select--</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
 
-            <label for="premium">Premium Amount:</label>
-            <input type="number" id="premium" name="premium" required><br>
+            <label for="previous_claim">Previous Claim:</label>
+            <select id="previous_claim" name="previous_claim" required>
+                <option value="">--Select--</option>
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </select>
 
             <button type="submit">Predict</button>
         </form>
-
-        <h3 id="result"></h3>
+        <div id="result"></div>
     </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        document.getElementById("claimForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const formData = {
+                age: document.getElementById("age").value,
+                gender: document.getElementById("gender").value,
+                policy_type: document.getElementById("policy_type").value,
+                medical_history: document.getElementById("medical_history").value,
+                previous_claim: document.getElementById("previous_claim").value
+            };
+
+            const response = await fetch("/predict_ajax", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+            document.getElementById("result").innerText =
+                `Claim Risk: ${result.likelihood}`;
+        });
+    </script>
 </body>
 </html>
