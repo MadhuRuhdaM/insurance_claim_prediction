@@ -18,10 +18,9 @@
             font-family: Arial, sans-serif;
             padding-left: 60%;
         }
-
         .notepad {
             width: 330px;
-            height: 500px;
+            height: 550px;
             background: rgba(255, 255, 255, 0.9);
             padding: 5px 23px 60px 23px;
             border-radius: 15px;
@@ -32,20 +31,17 @@
             margin-bottom: 80px;
             margin-top: 170px;
         }
-
         h2 {
             text-align: center;
             margin-bottom: 20px;
             font-size: 20px;
             color: #333;
         }
-
         label {
             font-weight: bold;
             margin-top: 10px;
             display: block;
         }
-
         input, select {
             width: 100%;
             padding: 8px;
@@ -54,7 +50,6 @@
             border: 1px solid #aaa;
             border-radius: 8px;
         }
-
         button {
             width: 100%;
             padding: 5px;
@@ -66,11 +61,9 @@
             cursor: pointer;
             transition: 0.3s;
         }
-
         button:hover {
             background: #0056b3;
         }
-
         #result {
             margin-top: 20px;
             text-align: center;
@@ -115,6 +108,9 @@
                 <option value="0">No</option>
             </select>
 
+            <label for="premium_amount">Premium Amount:</label>
+            <input type="number" id="premium_amount" name="premium_amount" placeholder="Enter premium amount" min="1000" max="100000" required>
+
             <button type="submit">Predict</button>
         </form>
         <div id="result"></div>
@@ -123,24 +119,21 @@
     <script>
         document.getElementById("claimForm").addEventListener("submit", async function(event) {
             event.preventDefault();
-
             const formData = {
                 age: document.getElementById("age").value,
                 gender: document.getElementById("gender").value,
                 policy_type: document.getElementById("policy_type").value,
                 medical_history: document.getElementById("medical_history").value,
-                previous_claim: document.getElementById("previous_claim").value
+                previous_claim: document.getElementById("previous_claim").value,
+                premium_amount: document.getElementById("premium_amount").value
             };
-
             const response = await fetch("/predict_ajax", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(formData)
             });
-
             const result = await response.json();
-            document.getElementById("result").innerText =
-                `Claim Risk: ${result.likelihood}`;
+            document.getElementById("result").innerText = `Claim Risk: ${result.likelihood}`;
         });
     </script>
 </body>
